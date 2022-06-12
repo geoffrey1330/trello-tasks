@@ -17,12 +17,34 @@ resource "aws_security_group" "web-sg" {
 }
 
 
-resource "aws_instance" "web" {
+resource "aws_instance" "web_public" {
+  count                  = length(local.public_cidr)
+
   ami                    = "ami-0022f774911c1d690"
   instance_type          = "t2.micro"
   key_name               = "${var.env_code}-keypair"
 
   vpc_security_group_ids = [aws_security_group.web-sg.id]
+
+  subnet_id              = aws_subnet.public[count.index].id
+
+  tags = {
+    Name = "${var.env_code}-web"
+  }
+}
+
+
+
+resource "aws_instance" "web_private" {
+  count                  = length(local.public_cidr)
+  
+  ami                    = "ami-0022f774911c1d690"
+  instance_type          = "t2.micro"
+  key_name               = "${var.env_code}-keypair"
+
+  vpc_security_group_ids = [aws_security_group.web-sg.id]
+
+  subnet_id              = aws_subnet.private[count.index].id
 
   tags = {
     Name = "${var.env_code}-web"
