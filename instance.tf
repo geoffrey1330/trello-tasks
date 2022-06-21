@@ -1,4 +1,3 @@
-
 resource "aws_security_group" "web-sg" {
   name = "${var.env_code}-sg"
   ingress {
@@ -61,4 +60,3 @@ resource "aws_instance" "web_private" {
     Name = "${var.env_code}-web"
   }
 }
-
