@@ -61,3 +61,4 @@ resource "aws_instance" "web_private" {
     Name = "${var.env_code}-web"
   }
 }
+
