@@ -3,12 +3,6 @@ resource "aws_security_group" "web-sg" {
   vpc_id = aws_vpc.main.id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/24", "10.0.1.0/24"]
-  }
-  ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
