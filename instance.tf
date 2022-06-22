@@ -24,12 +24,10 @@ resource "aws_security_group" "web-sg" {
 
 data "aws_ami" "amazonlinux" {
   most_recent = true
-
   filter {
     name   = "name"
     values = ["amzn2-ami-kernel-*"]
   }
-
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
@@ -39,13 +37,10 @@ data "aws_ami" "amazonlinux" {
 }
 
 resource "aws_instance" "web_public" {
-
   ami           = data.aws_ami.amazonlinux.id
   instance_type = "t2.micro"
   key_name      = "main"
-
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-
   subnet_id = aws_subnet.public[0].id
   
   tags = {
@@ -55,13 +50,10 @@ resource "aws_instance" "web_public" {
 
 
 resource "aws_instance" "web_private" {
-
   ami           = data.aws_ami.amazonlinux.id
   instance_type = "t2.micro"
   key_name      = "main"
-
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-
   subnet_id = aws_subnet.private[0].id
 
   tags = {
