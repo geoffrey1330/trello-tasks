@@ -27,6 +27,8 @@ resource "aws_subnet" "public" {
   vpc_id     = aws_vpc.main.id
   cidr_block = local.public_cidr[count.index]
 
+  map_public_ip_on_launch = true
+
   tags = {
     Name = "${var.env_code}-public${count.index}"
   }
@@ -53,6 +55,7 @@ resource "aws_internet_gateway" "main" {
 
 resource "aws_eip" "nat" {
   count = length(local.public_cidr)
+
 
   vpc   = true
 }
@@ -106,7 +109,7 @@ resource "aws_route_table_association" "public" {
 
 resource "aws_route_table_association" "private" {
   count          = length(local.private_cidr)
-  
+
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
