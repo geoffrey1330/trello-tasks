@@ -37,6 +37,12 @@ resource "aws_instance" "web_public" {
   key_name      = "main"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
   subnet_id = aws_subnet.public[0].id
+  user_data = <<EOF
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd && systemctl enable httpd
+  EOF
+
   
   tags = {
     Name = "${var.env_code}-web-public"
@@ -49,6 +55,12 @@ resource "aws_instance" "web_private" {
   key_name      = "main"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
   subnet_id = aws_subnet.private[0].id
+  user_data = <<EOF
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd && systemctl enable httpd
+  EOF
+
 
   tags = {
     Name = "${var.env_code}-web-private"
