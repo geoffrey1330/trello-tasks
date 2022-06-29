@@ -6,14 +6,14 @@ resource "aws_security_group" "web-sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] #["105.112.102.10/32","10.0.0.0/16"] 
+    cidr_blocks = ["105.112.100.127/32","10.0.0.0/16"] 
   }
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] #["105.112.102.10/32","10.0.0.0/16"] 
+    cidr_blocks = ["105.112.100.127/32","10.0.0.0/16"] 
   }
 
   egress {
@@ -45,10 +45,11 @@ resource "aws_instance" "web_public" {
   vpc_security_group_ids = [aws_security_group.web-sg.id]
   subnet_id = aws_subnet.public[0].id
   user_data = <<EOF
+    #!/usr/bin/env bash
     sudo yum update -y
     sudo yum install -y httpd
     sudo systemctl start httpd && sudo systemctl enable httpd
-  EOF
+    EOF
 
   
   tags = {
@@ -63,10 +64,11 @@ resource "aws_instance" "web_private" {
   vpc_security_group_ids = [aws_security_group.web-sg.id]
   subnet_id = aws_subnet.private[0].id
   user_data = <<EOF
+    #!/usr/bin/env bash
     sudo yum update -y
     sudo yum install -y httpd
     sudo systemctl start httpd && sudo systemctl enable httpd
-  EOF
+    EOF
 
 
   tags = {
