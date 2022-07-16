@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "web-sg" {
-  name   = "${data.terraform_remote_state.networking.outputs.env_code}-sg"
+  name   = "${var.env_code}-sg"
   vpc_id = data.terraform_remote_state.networking.outputs.vpc_id #aws_vpc.main.id
 
   ingress {
@@ -66,7 +66,7 @@ resource "aws_instance" "web_public" {
 
 
   tags = {
-    Name = "${data.terraform_remote_state.networking.outputs.env_code}-web-public"
+    Name = "${var.env_code}-web-public"
   }
 }
 
@@ -85,6 +85,6 @@ resource "aws_instance" "web_private" {
 
 
   tags = {
-    Name = "${data.terraform_remote_state.networking.outputs.env_code}-web-private"
+    Name = "${var.env_code}-web-private"
   }
 }

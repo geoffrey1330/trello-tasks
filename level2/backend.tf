@@ -1,7 +1,8 @@
+
 terraform {
   backend "s3" {
     bucket         = "israel-terraform"
-    key            = "trello/networking/state/terraform.tfstate"
+    key            = "level2.tfstate"
     region         = "us-east-1"
     dynamodb_table = "israel-dynamo-terraform"
   }
