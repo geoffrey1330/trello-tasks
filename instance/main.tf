@@ -1,19 +1,19 @@
-# terraform {
-#   required_providers {
-#     aws = {
-#       source  = "hashicorp/aws"
-#       version = "~> 3.0"
-#     }
-#   }
-# }
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
 
 provider "aws" {
   region = "us-east-1"
 }
 
 resource "aws_security_group" "web-sg" {
-  name   = "${data.terrafrom_remote_state.networking.output.env_code}-sg"
-  vpc_id = data.terrafrom_remote_state.networking.output.vpc_id #aws_vpc.main.id
+  name   = "${data.terraform_remote_state.networking.outputs.env_code}-sg"
+  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id #aws_vpc.main.id
 
   ingress {
     from_port   = 22
@@ -56,7 +56,7 @@ resource "aws_instance" "web_public" {
   instance_type          = "t2.micro"
   key_name               = "main"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-  subnet_id              = data.terrafrom_remote_state.networking.output.public-subnet_id
+  subnet_id              = data.terraform_remote_state.networking.outputs.public-subnet_id
   user_data              = <<EOF
     #!/usr/bin/env bash
     sudo yum update -y
@@ -66,7 +66,7 @@ resource "aws_instance" "web_public" {
 
 
   tags = {
-    Name = "${data.terrafrom_remote_state.networking.output.env_code}-web-public"
+    Name = "${data.terraform_remote_state.networking.outputs.env_code}-web-public"
   }
 }
 
@@ -75,7 +75,7 @@ resource "aws_instance" "web_private" {
   instance_type          = "t2.micro"
   key_name               = "main"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-  subnet_id              = data.terrafrom_remote_state.networking.output.private-subnet_id
+  subnet_id              = data.terraform_remote_state.networking.outputs.private-subnet_id
   user_data              = <<EOF
     #!/usr/bin/env bash
     sudo yum update -y
@@ -85,6 +85,6 @@ resource "aws_instance" "web_private" {
 
 
   tags = {
-    Name = "${data.terrafrom_remote_state.networking.output.env_code}-web-private"
+    Name = "${data.terraform_remote_state.networking.outputs.env_code}-web-private"
   }
 }

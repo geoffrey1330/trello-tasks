@@ -1,5 +1,5 @@
 
-data "terrafrom_remote_state" "networking" {
+data "terraform_remote_state" "networking" {
   backend = "s3"
   config = {
     bucket         = "israel-terraform"
