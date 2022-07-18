@@ -1,6 +1,19 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+
 resource "aws_security_group" "web-sg" {
   name   = "${var.env_code}-sg"
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id #aws_vpc.main.id
 
   ingress {
     from_port   = 22
@@ -43,7 +56,7 @@ resource "aws_instance" "web_public" {
   instance_type          = "t2.micro"
   key_name               = "main"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-  subnet_id              = aws_subnet.public[0].id
+  subnet_id              = data.terraform_remote_state.networking.outputs.public-subnet_id
   user_data              = <<EOF
     #!/usr/bin/env bash
     sudo yum update -y
@@ -62,7 +75,7 @@ resource "aws_instance" "web_private" {
   instance_type          = "t2.micro"
   key_name               = "main"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-  subnet_id              = aws_subnet.private[0].id
+  subnet_id              = data.terraform_remote_state.networking.outputs.private-subnet_id
   user_data              = <<EOF
     #!/usr/bin/env bash
     sudo yum update -y
