@@ -17,29 +17,13 @@ resource "aws_security_group" "lb-sg" {
   }
 }
 
-# resource "aws_lb" "app-lb" {
-#   name               = "${var.env_code}-lb"
-#   internal           = false
-#   load_balancer_type = "application"
-  
-#   tags = {
-#      Name = "${var.env_code}-lb"
-#   }
-# }
-
-# # Create a new load balancer attachment
-# resource "aws_elb_attachment" "lb-attach" {
-#   elb      = aws_lb.app-lb.id
-#   instance = aws_instance.web_public.id
-# }
-
-
 # Create a new load balancer
 resource "aws_elb" "app-lb" {
+  
   name               = "${var.env_code}-lb"
-  subnets            = [data.terraform_remote_state.networking.outputs.public-subnet_id,data.terraform_remote_state.networking.outputs.private-subnet_id]
-  security_groups    = [aws_security_group.lb-sg.id]
-  #availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  subnets            =  data.terraform_remote_state.networking.outputs.public-subnet_id 
+  #security_groups    = [aws_security_group.lb-sg.id]
+  
 
   listener {
     instance_port     = 80
@@ -48,15 +32,14 @@ resource "aws_elb" "app-lb" {
     lb_protocol       = "http"
   }
 
-  # health_check {
-  #   healthy_threshold   = 2
-  #   unhealthy_threshold = 2
-  #   timeout             = 3
-  #   target              = "HTTP:80/"
-  #   interval            = 30
-  # }
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 20
+    target              = "HTTP:80/"
+    interval            = 30
+  }
 
-  instances                   = [aws_instance.web_public.id]
   cross_zone_load_balancing   = true
   idle_timeout                = 400
   connection_draining         = true
@@ -66,3 +49,11 @@ resource "aws_elb" "app-lb" {
     Name = "${var.env_code}-lb"
   }
 }
+
+resource "aws_elb_attachment" "lb-attach" {
+  count    = 2
+  elb      = aws_elb.app-lb.id
+
+  instance = aws_instance.web_public[count.index].id
+}
+
