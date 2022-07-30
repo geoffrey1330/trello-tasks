@@ -6,7 +6,7 @@ resource "aws_security_group" "lb-sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["105.112.102.210/32"] 
+    cidr_blocks = ["105.112.108.199/32"] 
   }
 
   egress {
@@ -22,21 +22,21 @@ resource "aws_elb" "app-lb" {
   
   name               = "${var.env_code}-lb"
   subnets            =  data.terraform_remote_state.networking.outputs.public-subnet_id 
-  #security_groups    = [aws_security_group.lb-sg.id]
+  security_groups    = [aws_security_group.lb-sg.id]
   
 
   listener {
     instance_port     = 80
-    instance_protocol = "http"
+    instance_protocol = "tcp"
     lb_port           = 80
-    lb_protocol       = "http"
+    lb_protocol       = "tcp"
   }
 
   health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    timeout             = 20
-    target              = "HTTP:80/"
+    healthy_threshold   = 5
+    unhealthy_threshold = 5
+    timeout             = 5
+    target              = "TCP:80"
     interval            = 30
   }
 
@@ -44,6 +44,7 @@ resource "aws_elb" "app-lb" {
   idle_timeout                = 400
   connection_draining         = true
   connection_draining_timeout = 400
+  internal                    = false
 
   tags = {
     Name = "${var.env_code}-lb"
