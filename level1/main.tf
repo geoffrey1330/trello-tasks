@@ -21,11 +21,18 @@ locals {
   private_cidr = ["10.0.2.0/24", "10.0.3.0/24"]
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+
 resource "aws_subnet" "public" {
   count = length(local.public_cidr)
 
   vpc_id     = aws_vpc.main.id
   cidr_block = local.public_cidr[count.index]
+  
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
   map_public_ip_on_launch = true
 
@@ -39,6 +46,8 @@ resource "aws_subnet" "private" {
 
   vpc_id     = aws_vpc.main.id
   cidr_block = local.private_cidr[count.index]
+
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
     Name = "${var.env_code}-private${count.index}"
@@ -55,7 +64,6 @@ resource "aws_internet_gateway" "main" {
 
 resource "aws_eip" "nat" {
   count = length(local.public_cidr)
-
 
   vpc = true
 }

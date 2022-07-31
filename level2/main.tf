@@ -19,14 +19,14 @@ resource "aws_security_group" "web-sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["105.112.100.127/32", "10.0.0.0/16"]
+    cidr_blocks = ["105.112.108.199/32", "10.0.0.0/16"]
   }
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["105.112.100.127/32", "10.0.0.0/16"]
+    cidr_blocks = ["105.112.102.210/32", "10.0.0.0/16"]
   }
 
   egress {
@@ -52,18 +52,18 @@ data "aws_ami" "amazonlinux" {
 }
 
 resource "aws_instance" "web_public" {
+  count                  = 2
   ami                    = data.aws_ami.amazonlinux.id
   instance_type          = "t2.micro"
   key_name               = "main"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-  subnet_id              = data.terraform_remote_state.networking.outputs.public-subnet_id
+  subnet_id              = data.terraform_remote_state.networking.outputs.public-subnet_id[count.index]  ##"${element(data.terraform_remote_state.networking.outputs.public-subnet_id, count.index)}" 
   user_data              = <<EOF
     #!/usr/bin/env bash
     sudo yum update -y
     sudo yum install -y httpd
     sudo systemctl start httpd && sudo systemctl enable httpd
     EOF
-
 
   tags = {
     Name = "${var.env_code}-web-public"
@@ -71,18 +71,18 @@ resource "aws_instance" "web_public" {
 }
 
 resource "aws_instance" "web_private" {
+  count                  = 2
   ami                    = data.aws_ami.amazonlinux.id
   instance_type          = "t2.micro"
   key_name               = "main"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-  subnet_id              = data.terraform_remote_state.networking.outputs.private-subnet_id
+  subnet_id              = data.terraform_remote_state.networking.outputs.private-subnet_id[count.index] ##"${element(data.terraform_remote_state.networking.outputs.private-subnet_id, count.index)}" 
   user_data              = <<EOF
     #!/usr/bin/env bash
     sudo yum update -y
     sudo yum install -y httpd
     sudo systemctl start httpd && sudo systemctl enable httpd
     EOF
-
 
   tags = {
     Name = "${var.env_code}-web-private"
