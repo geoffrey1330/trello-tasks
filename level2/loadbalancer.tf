@@ -50,11 +50,3 @@ resource "aws_elb" "app-lb" {
     Name = "${var.env_code}-lb"
   }
 }
-
-resource "aws_elb_attachment" "lb-attach" {
-  count    = 2
-  elb      = aws_elb.app-lb.id
-
-  instance = aws_instance.web_public[count.index].id
-}
-
