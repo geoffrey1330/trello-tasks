@@ -1,8 +1,8 @@
 resource "aws_iam_policy" "iam_policy_s3" {
-  name        = "${var.env_code}_iam_policy"
-  
+  name = "${var.env_code}_iam_policy"
+
   description = "My S3 policy"
-  policy = <<EOF
+  policy      = <<EOF
 {
    "Version": "2012-10-17",
       "Statement": [
