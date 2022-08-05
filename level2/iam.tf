@@ -1,6 +1,6 @@
 resource "aws_iam_policy" "iam_policy_s3" {
   name        = "${var.env_code}_iam_policy"
-  #path        = "/"
+  
   description = "My S3 policy"
   policy = <<EOF
 {
@@ -25,7 +25,7 @@ resource "aws_iam_policy" "iam_policy_s3" {
 }
 
 resource "aws_iam_role" "ec2_s3_access_iam_role" {
-  name               = "${var.env_code}_iam_role"
+  name               = "${var.env_code}_profile_role"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -52,7 +52,7 @@ resource "aws_iam_role_policy_attachment" "assign-policy-to-role-attach" {
 }
 
 resource "aws_iam_instance_profile" "lc_profile" {
-  name = "${var.env_code}-profile"
+  name = "${var.env_code}_profile_role"
   role = aws_iam_role.ec2_s3_access_iam_role.name
 
 }
