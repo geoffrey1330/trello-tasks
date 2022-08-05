@@ -1,12 +1,12 @@
 resource "aws_security_group" "lb-sg" {
   name   = "${var.env_code}-lb-sg"
-  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id 
+  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["105.112.108.199/32"] 
+    cidr_blocks = ["105.112.108.199/32"]
   }
 
   egress {
@@ -19,11 +19,11 @@ resource "aws_security_group" "lb-sg" {
 
 # Create a new load balancer
 resource "aws_elb" "app-lb" {
-  
-  name               = "${var.env_code}-lb"
-  subnets            =  data.terraform_remote_state.networking.outputs.public-subnet_id 
-  security_groups    = [aws_security_group.lb-sg.id]
-  
+
+  name            = "${var.env_code}-lb"
+  subnets         = data.terraform_remote_state.networking.outputs.public-subnet_id
+  security_groups = [aws_security_group.lb-sg.id]
+
 
   listener {
     instance_port     = 80
