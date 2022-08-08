@@ -24,7 +24,6 @@ resource "aws_elb" "app-lb" {
   subnets         = data.terraform_remote_state.networking.outputs.public-subnet_id
   security_groups = [aws_security_group.lb-sg.id]
 
-
   listener {
     instance_port     = 80
     instance_protocol = "tcp"

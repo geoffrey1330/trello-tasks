@@ -24,8 +24,6 @@ resource "aws_iam_policy" "iam_policy_s3" {
  EOF
 }
 
-
-
 resource "aws_iam_role" "ec2_s3_access_iam_role" {
   name               = "${var.env_code}_profile_role"
   assume_role_policy = <<EOF

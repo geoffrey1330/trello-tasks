@@ -47,7 +47,6 @@ data "aws_ami" "amazonlinux" {
 resource "aws_launch_configuration" "web_config" {
   image_id      = data.aws_ami.amazonlinux.id
   instance_type = "t2.micro"
-  #key_name             = "main"
   iam_instance_profile = aws_iam_instance_profile.lc_profile.name
   security_groups      = [aws_security_group.web-sg.id]
 
