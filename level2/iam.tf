@@ -24,6 +24,8 @@ resource "aws_iam_policy" "iam_policy_s3" {
  EOF
 }
 
+
+
 resource "aws_iam_role" "ec2_s3_access_iam_role" {
   name               = "${var.env_code}_profile_role"
   assume_role_policy = <<EOF
@@ -49,6 +51,13 @@ resource "aws_iam_role_policy_attachment" "assign-policy-to-role-attach" {
   policy_arn = aws_iam_policy.iam_policy_s3.arn
 
   depends_on = [aws_iam_policy.iam_policy_s3]
+}
+
+resource "aws_iam_role_policy_attachment" "assign-policy-SessionManager" {
+  role       = aws_iam_role.ec2_s3_access_iam_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+
+  depends_on = [aws_iam_role.ec2_s3_access_iam_role]
 }
 
 resource "aws_iam_instance_profile" "lc_profile" {
