@@ -13,14 +13,7 @@ provider "aws" {
 
 resource "aws_security_group" "web-sg" {
   name   = "${var.env_code}-sg"
-  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id #aws_vpc.main.id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["105.112.108.199/32", "10.0.0.0/16"]
-  }
+  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id
 
   ingress {
     from_port   = 80
@@ -52,9 +45,8 @@ data "aws_ami" "amazonlinux" {
 }
 
 resource "aws_launch_configuration" "web_config" {
-  image_id             = data.aws_ami.amazonlinux.id
-  instance_type        = "t2.micro"
-  key_name             = "main"
+  image_id      = data.aws_ami.amazonlinux.id
+  instance_type = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.lc_profile.name
   security_groups      = [aws_security_group.web-sg.id]
 
