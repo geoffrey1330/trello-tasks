@@ -1,9 +1,7 @@
-
-data "terraform_remote_state" "networking" {
-  backend = "s3"
-  config = {
+terraform {
+  backend "s3" {
     bucket         = "israel-terraform"
-    key            = "level1.tfstate"
+    key            = "module.tfstate"
     region         = "us-east-1"
     dynamodb_table = "israel-dynamo-terraform"
   }

@@ -1,19 +1,6 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.0"
-    }
-  }
-}
-
-provider "aws" {
-  region = "us-east-1"
-}
-
 resource "aws_security_group" "web-sg" {
   name   = "${var.env_code}-sg"
-  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -45,8 +32,8 @@ data "aws_ami" "amazonlinux" {
 }
 
 resource "aws_launch_configuration" "web_config" {
-  image_id      = data.aws_ami.amazonlinux.id
-  instance_type = "t2.micro"
+  image_id             = data.aws_ami.amazonlinux.id
+  instance_type        = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.lc_profile.name
   security_groups      = [aws_security_group.web-sg.id]
 
