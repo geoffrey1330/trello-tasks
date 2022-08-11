@@ -2,14 +2,15 @@ variable "env_code" {
   type = string
 }
 
-# variable "vpc_id" {
-#   type = string
-# }
+variable "vpc" {
+  type = string
+  default = "10.0.0.0/16"
+}
 
-# variable "public-subnet_id" {
+variable "public-subnet" {
+  default = ["10.0.0.0/24", "10.0.1.0/24"]
+}
 
-# }
-
-# variable "private-subnet_id" {
-
-# }
+variable "private-subnet" {
+  default = ["10.0.2.0/24", "10.0.3.0/24"]
+}
