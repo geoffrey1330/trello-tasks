@@ -1,6 +1,6 @@
 resource "aws_security_group" "lb-sg" {
   name   = "${var.env_code}-lb-sg"
-  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -21,7 +21,7 @@ resource "aws_security_group" "lb-sg" {
 resource "aws_elb" "app-lb" {
 
   name            = "${var.env_code}-lb"
-  subnets         = data.terraform_remote_state.networking.outputs.public-subnet_id
+  subnets         = var.public-subnet_id
   security_groups = [aws_security_group.lb-sg.id]
 
   listener {

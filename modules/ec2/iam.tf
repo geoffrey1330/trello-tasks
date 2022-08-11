@@ -1,6 +1,5 @@
 resource "aws_iam_policy" "iam_policy_s3" {
-  name = "${var.env_code}_iam_policy"
-
+  name        = "${var.env_code}_iam_policy"
   description = "My S3 policy"
   policy      = <<EOF
 {
@@ -61,5 +60,4 @@ resource "aws_iam_role_policy_attachment" "assign-policy-SessionManager" {
 resource "aws_iam_instance_profile" "lc_profile" {
   name = "${var.env_code}_profile_role"
   role = aws_iam_role.ec2_s3_access_iam_role.name
-
 }

@@ -1,6 +1,6 @@
 resource "aws_autoscaling_group" "app-asg" {
   launch_configuration = aws_launch_configuration.web_config.id
-  vpc_zone_identifier  = data.terraform_remote_state.networking.outputs.public-subnet_id
+  vpc_zone_identifier  = var.public-subnet_id
 
   load_balancers = [aws_elb.app-lb.name]
 
