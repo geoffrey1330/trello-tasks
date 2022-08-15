@@ -15,10 +15,10 @@ module "ec2" {
   source   = "../modules/ec2"
   env_code = var.env_code
 
-  vpc_id              = data.terraform_remote_state.networking.outputs.vpc_id
-  public-subnet_id    = data.terraform_remote_state.networking.outputs.public-subnet_id
-  private-subnet_id   = data.terraform_remote_state.networking.outputs.private-subnet_id
-  aws_elb-app-lb_name = module.loadbalancer.aws_elb-app-lb_name
+  vpc_id            = data.terraform_remote_state.networking.outputs.vpc_id
+  public-subnet_id  = data.terraform_remote_state.networking.outputs.public-subnet_id
+  private-subnet_id = data.terraform_remote_state.networking.outputs.private-subnet_id
+  target_group_arn  = module.loadbalancer.target_group_arn
 }
 
 module "loadbalancer" {

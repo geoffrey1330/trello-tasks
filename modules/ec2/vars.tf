@@ -10,4 +10,4 @@ variable "public-subnet_id" {}
 
 variable "private-subnet_id" {}
 
-variable "aws_elb-app-lb_name" {}
+variable "target_group_arn" {}

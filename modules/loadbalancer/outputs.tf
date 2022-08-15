@@ -1,3 +1,3 @@
-output "aws_elb-app-lb_name" {
-  value = aws_elb.app-lb.name
+output "target_group_arn" {
+  value = aws_lb_target_group.target-group.arn
 }

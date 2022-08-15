@@ -17,35 +17,45 @@ resource "aws_security_group" "lb-sg" {
   }
 }
 
-# Create a new load balancer
-resource "aws_elb" "app-lb" {
+resource "aws_lb" "app-lb" {
+  name     = "${var.env_code}-alb"
+  internal = false
 
-  name            = "${var.env_code}-lb"
-  subnets         = var.public-subnet_id
   security_groups = [aws_security_group.lb-sg.id]
+  subnets         = var.public-subnet_id
 
-  listener {
-    instance_port     = 80
-    instance_protocol = "tcp"
-    lb_port           = 80
-    lb_protocol       = "tcp"
-  }
-
-  health_check {
-    healthy_threshold   = 5
-    unhealthy_threshold = 5
-    timeout             = 5
-    target              = "TCP:80"
-    interval            = 30
-  }
-
-  cross_zone_load_balancing   = true
-  idle_timeout                = 400
-  connection_draining         = true
-  connection_draining_timeout = 400
-  internal                    = false
+  ip_address_type    = "ipv4"
+  load_balancer_type = "application"
 
   tags = {
-    Name = "${var.env_code}-lb"
+    Name = "${var.env_code}-alb"
+  }
+}
+
+resource "aws_lb_target_group" "target-group" {
+  health_check {
+    interval            = 30
+    path                = "/"
+    protocol            = "HTTP"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 5
+  }
+
+  name        = "${var.env_code}-tg"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id      = var.vpc_id
+}
+
+resource "aws_lb_listener" "alb-listner" {
+  load_balancer_arn = aws_lb.app-lb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target-group.arn
   }
 }
