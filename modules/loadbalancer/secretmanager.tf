@@ -3,7 +3,7 @@ data "aws_secretsmanager_secret" "rds_password" {
 }
 
 data "aws_secretsmanager_secret_version" "rds_password" {
-  secret_id     = data.aws_secretsmanager_secret.rds_password.id
+  secret_id = data.aws_secretsmanager_secret.rds_password.id
 }
 
 locals {
