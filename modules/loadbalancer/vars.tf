@@ -9,3 +9,13 @@ variable "vpc_id" {
 variable "public-subnet_id" {}
 
 variable "private-subnet_id" {}
+
+variable "domain_name" {
+  default = "israeltrello.be"
+  type    = string
+}
+
+variable "record_name" {
+  default = "www"
+  type    = string
+}
