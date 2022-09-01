@@ -37,4 +37,8 @@ resource "aws_db_instance" "db_instance" {
   backup_retention_period = 25
   backup_window           = "21:00-23:00"
   skip_final_snapshot     = true
+
+  tags = {
+    Name = var.env_code
+  }
 }
