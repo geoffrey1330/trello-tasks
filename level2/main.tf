@@ -28,3 +28,13 @@ module "loadbalancer" {
   public-subnet_id  = module.ec2.public-subnet_id
   private-subnet_id = module.ec2.private-subnet_id
 }
+
+module "rds" {
+  source            = "../modules/rds"
+  env_code          = var.env_code
+  vpc_id            = module.ec2.vpc_id
+  private-subnet_id = module.ec2.private-subnet_id
+  rds_password      = local.rds_password
+  lb_security_group = module.loadbalancer.lb_security_group
+  multi_az          = true
+}
