@@ -11,13 +11,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# module "vpc" {
-#   source         = "../modules/vpc"
-#   env_code       = var.env_code
-#   vpc            = var.vpc
-#   public-subnet  = var.public-subnet
-#   private-subnet = var.private-subnet
-# }
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -31,4 +24,3 @@ module "vpc" {
   public_subnets     = var.public-subnet
   enable_nat_gateway = true
 }
-
