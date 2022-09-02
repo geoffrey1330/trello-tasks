@@ -8,8 +8,8 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = aws_lb.app-lb.dns_name
-    zone_id                = aws_lb.app-lb.zone_id
+    name                   = module.loadbalancer.lb_dns_name
+    zone_id                = module.loadbalancer.lb_zone_id
     evaluate_target_health = true
   }
 }

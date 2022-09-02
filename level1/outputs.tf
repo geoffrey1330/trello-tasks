@@ -7,9 +7,9 @@ output "vpc_id" {
 }
 
 output "public-subnet_id" {
-  value = module.vpc.public-subnet_id
+  value = module.vpc.public_subnets
 }
 
 output "private-subnet_id" {
-  value = module.vpc.private-subnet_id
+  value = module.vpc.private_subnets
 }
