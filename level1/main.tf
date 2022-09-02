@@ -23,12 +23,12 @@ data "aws_availability_zones" "available" {
 }
 
 module "vpc" {
-  source                 = "terraform-aws-modules/vpc/aws"
-  name                   = "${var.env_code}-vpc"
-  cidr                   = var.vpc
-  azs                    = data.aws_availability_zones.available.names[*]
-  private_subnets        = var.private-subnet
-  public_subnets         = var.public-subnet
-  enable_nat_gateway     = true
+  source             = "terraform-aws-modules/vpc/aws"
+  name               = "${var.env_code}-vpc"
+  cidr               = var.vpc
+  azs                = data.aws_availability_zones.available.names[*]
+  private_subnets    = var.private-subnet
+  public_subnets     = var.public-subnet
+  enable_nat_gateway = true
 }
 

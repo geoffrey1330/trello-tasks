@@ -1,8 +1,8 @@
 module "external_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name        = "${var.env_code}-external"
-  vpc_id      = data.terraform_remote_state.networking.outputs.vpc_id
+  name   = "${var.env_code}-external"
+  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id
 
 
   ingress_with_cidr_blocks = [
@@ -19,11 +19,11 @@ module "external_sg" {
       cidr_blocks = "0.0.0.0/0"
     },
     {
-    from_port       = 3306
-    to_port         = 3306
-    protocol        = "tcp"
-    cidr_blocks = "0.0.0.0/0"
-  }
+      from_port   = 3306
+      to_port     = 3306
+      protocol    = "tcp"
+      cidr_blocks = "0.0.0.0/0"
+    }
   ]
 
   egress_with_cidr_blocks = [

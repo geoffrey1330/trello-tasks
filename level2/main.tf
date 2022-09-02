@@ -1,8 +1,7 @@
 terraform {
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      #version = "~> 3.0"
+      source = "hashicorp/aws"
     }
   }
 }
@@ -24,15 +23,15 @@ module "ec2autoscaling" {
   target_group_arns         = module.loadbalancer.target_group_arns
   force_delete              = true
 
-  launch_template_name        = var.env_code
-  update_default_version      = true
+  launch_template_name   = var.env_code
+  update_default_version = true
 
   image_id        = data.aws_ami.amazonlinux.id
   instance_type   = "t2.micro"
   key_name        = "main"
   security_groups = [module.external_sg.security_group_id]
-  user_data = filebase64("user-data.sh")
-    
+  user_data       = filebase64("user-data.sh")
+
 
   create_iam_instance_profile = true
   iam_role_name               = var.env_code
@@ -60,9 +59,9 @@ module "loadbalancer" {
 
   target_groups = [
     {
-      name_prefix      = "main"
-      backend_protocol = "HTTP"
-      backend_port     = 80
+      name_prefix          = "main"
+      backend_protocol     = "HTTP"
+      backend_port         = 80
       deregistration_delay = 10
 
       health_check = {
@@ -78,13 +77,12 @@ module "loadbalancer" {
     }
   ]
 
-  
   https_listeners = [
     {
-      port               = 443
-      protocol           = "HTTPS"
-      certificate_arn    = aws_acm_certificate.cert.arn
-      action_type        = "forward"
+      port            = 443
+      protocol        = "HTTPS"
+      certificate_arn = aws_acm_certificate.cert.arn
+      action_type     = "forward"
     }
   ]
 }
@@ -115,6 +113,6 @@ module "rds" {
   create_db_subnet_group = true
   subnet_ids             = data.terraform_remote_state.networking.outputs.private-subnet_id
 
-  family = "mysql5.7"
+  family               = "mysql5.7"
   major_engine_version = "5.7"
 }
